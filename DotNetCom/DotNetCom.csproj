@@ -1,0 +1,209 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3EF532D3-9AC0-4E9B-B469-783D01A2F947}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DotNetCom</RootNamespace>
+    <AssemblyName>DotNetCom</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.OPCAutomation">
+      <HintPath>.\Interop.OPCAutomation.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ChartServer\ChartConfig.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ChartServer\ChartData.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ChartServer\ChartDataset.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ChartServer\ChartLegend.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ChartServer\ChartPenCollectionEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ChartServer\ChartPenCollectionEditor.Designer.cs">
+      <DependentUpon>ChartPenCollectionEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChartServer\ChartSettings.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ChartServer\ChartWebServer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DataBase\Data.cs" />
+    <Compile Include="DataBase\TagsDataBase.cs" />
+    <Compile Include="General\Controls\ComponentConsole.cs" />
+    <Compile Include="General\Controls\JsonTreeViewLoader.cs" />
+    <Compile Include="General\NamedObject\INamedObject.cs" />
+    <Compile Include="General\NamedObject\ObjectSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\NamedObject\ObjectSelector.Designer.cs">
+      <DependentUpon>ObjectSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General\Tags\ITagWriterConteiner.cs" />
+    <Compile Include="General\Tags\ITagReaderContainer.cs" />
+    <Compile Include="General\Tags\ITagGroupsConteiner.cs" />
+    <Compile Include="General\Tags\Tag.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="General\Tags\TagLink.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="General\Tags\TagLink.Designer.cs">
+      <DependentUpon>TagLink.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General\Tags\TagCollection.cs" />
+    <Compile Include="General\Tags\TagExplorer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="General\Tags\TagExplorer.Designer.cs">
+      <DependentUpon>TagExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General\Tags\TagGroup.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="General\Tags\TagGroup.Designer.cs">
+      <DependentUpon>TagGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OpcDa\OpcBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpcDa\OpcBrowser.Designer.cs">
+      <DependentUpon>OpcBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OpcDa\OpcClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OpcDa\OpcServerConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serial.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Serial.Designer.cs">
+      <DependentUpon>Serial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Text\IText.cs" />
+    <Compile Include="Text\JsonSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Text\JsonSelector.Designer.cs">
+      <DependentUpon>JsonSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Text\SerialText.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Text\SerialText.Designer.cs">
+      <DependentUpon>SerialText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Web\WebServer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Web\WebServer.Designer.cs">
+      <DependentUpon>WebServer.cs</DependentUpon>
+    </Compile>
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ChartServer\ChartPenCollectionEditor.resx">
+      <DependentUpon>ChartPenCollectionEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\NamedObject\ObjectSelector.resx">
+      <DependentUpon>ObjectSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpcDa\OpcBrowser.resx">
+      <DependentUpon>OpcBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Text\JsonSelector.resx">
+      <DependentUpon>JsonSelector.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
