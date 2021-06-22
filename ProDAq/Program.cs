@@ -15,7 +15,7 @@ namespace ProDAq
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new TrendTester());
+            Application.Run(new Form1());
         }
     }
 }
