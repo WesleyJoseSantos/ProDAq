@@ -31,6 +31,9 @@ namespace DotNetCom.Text
         {
             this.components = new System.ComponentModel.Container();
             this.browserList = new System.Windows.Forms.TreeView();
+            this.cmsTree = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btRefresh = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -45,19 +48,17 @@ namespace DotNetCom.Text
             this.itemsToAdd = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.itemProperty = new System.Windows.Forms.PropertyGrid();
-            this.cmsTree = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsTree.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.cmsTree.SuspendLayout();
             this.SuspendLayout();
             // 
             // browserList
             // 
-            this.browserList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.browserList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.browserList.CheckBoxes = true;
             this.browserList.ContextMenuStrip = this.cmsTree;
@@ -67,6 +68,28 @@ namespace DotNetCom.Text
             this.browserList.TabIndex = 0;
             this.browserList.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.browserList_AfterCheck);
             this.browserList.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.browserList_AfterSelect);
+            // 
+            // cmsTree
+            // 
+            this.cmsTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.selectAllToolStripMenuItem,
+            this.deselectAllToolStripMenuItem});
+            this.cmsTree.Name = "cmsTree";
+            this.cmsTree.Size = new System.Drawing.Size(136, 48);
+            // 
+            // selectAllToolStripMenuItem
+            // 
+            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.selectAllToolStripMenuItem.Text = "Select All";
+            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            // 
+            // deselectAllToolStripMenuItem
+            // 
+            this.deselectAllToolStripMenuItem.Name = "deselectAllToolStripMenuItem";
+            this.deselectAllToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.deselectAllToolStripMenuItem.Text = "Deselect All";
+            this.deselectAllToolStripMenuItem.Click += new System.EventHandler(this.deselectAllToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -109,6 +132,7 @@ namespace DotNetCom.Text
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(12, 405);
             this.label3.Name = "label3";
@@ -118,6 +142,8 @@ namespace DotNetCom.Text
             // 
             // rtbReceivedData
             // 
+            this.rtbReceivedData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbReceivedData.Location = new System.Drawing.Point(12, 423);
             this.rtbReceivedData.Name = "rtbReceivedData";
             this.rtbReceivedData.Size = new System.Drawing.Size(347, 79);
@@ -128,6 +154,8 @@ namespace DotNetCom.Text
             // 
             this.cbFullId.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbFullId.AutoSize = true;
+            this.cbFullId.Checked = true;
+            this.cbFullId.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbFullId.Location = new System.Drawing.Point(12, 378);
             this.cbFullId.Name = "cbFullId";
             this.cbFullId.Size = new System.Drawing.Size(143, 17);
@@ -210,6 +238,7 @@ namespace DotNetCom.Text
             this.itemsToAdd.TabIndex = 3;
             this.itemsToAdd.UseCompatibleStateImageBehavior = false;
             this.itemsToAdd.View = System.Windows.Forms.View.Details;
+            this.itemsToAdd.SelectedIndexChanged += new System.EventHandler(this.itemsToAdd_SelectedIndexChanged);
             // 
             // columnHeader2
             // 
@@ -226,28 +255,6 @@ namespace DotNetCom.Text
             this.itemProperty.Size = new System.Drawing.Size(395, 160);
             this.itemProperty.TabIndex = 0;
             // 
-            // cmsTree
-            // 
-            this.cmsTree.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.selectAllToolStripMenuItem,
-            this.deselectAllToolStripMenuItem});
-            this.cmsTree.Name = "cmsTree";
-            this.cmsTree.Size = new System.Drawing.Size(136, 48);
-            // 
-            // selectAllToolStripMenuItem
-            // 
-            this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.selectAllToolStripMenuItem.Text = "Select All";
-            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
-            // 
-            // deselectAllToolStripMenuItem
-            // 
-            this.deselectAllToolStripMenuItem.Name = "deselectAllToolStripMenuItem";
-            this.deselectAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.deselectAllToolStripMenuItem.Text = "Deselect All";
-            this.deselectAllToolStripMenuItem.Click += new System.EventHandler(this.deselectAllToolStripMenuItem_Click);
-            // 
             // JsonSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -257,13 +264,13 @@ namespace DotNetCom.Text
             this.Name = "JsonSelector";
             this.Text = "JsonSelector";
             this.Load += new System.EventHandler(this.JsonSelector_Load);
+            this.cmsTree.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.cmsTree.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
