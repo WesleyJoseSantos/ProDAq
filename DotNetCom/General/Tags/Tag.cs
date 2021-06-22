@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using DotNetCom.General.NamedObject;
 using DotNetCom.DataBase;
+using System.Text.RegularExpressions;
 
 namespace DotNetCom.General.Tags
 {
@@ -65,6 +66,20 @@ namespace DotNetCom.General.Tags
         ~Tag()
         {
             if (Name != null && Name != "") Data.TagsDataBase.Remove(this);
+        }
+
+        public static string GetTagName(string itName, bool toUpperCase)
+        {
+            string tagName = "";
+            tagName = itName.Replace(" ", "_");
+            tagName = tagName.Replace(".", "_").Trim();
+            tagName = tagName.Replace("\n", "_").Trim();
+            tagName = Regex.Replace(tagName, @"[^0-9a-zA-Zz._]", string.Empty);
+            if (toUpperCase)
+            {
+                tagName = tagName.ToUpper();
+            }
+            return tagName;
         }
     }
 
