@@ -19,6 +19,8 @@ namespace DotNetCom.Text
 
         private List<string> itIds = new List<string>();
 
+        private string jsonData = ""; 
+
         public IText TextInterface
         {
             get => textInterface;
@@ -60,13 +62,13 @@ namespace DotNetCom.Text
             {
                 try
                 {
-                    var selected = NodeToJsonItem(e.Node);
+                    var selected = NodeToJsonItem(e.Node, jsonData);
                     itemProperty.SelectedObject = selected;
                 }
                 catch (Exception ex)
                 {
-                    rtbReceivedData.AppendText(ex.Message + '\n');
-                    rtbReceivedData.AppendText(ex.StackTrace + '\n');
+                    Log(ex.Message);
+                    Log(ex.StackTrace);
                 }
             }
         }
@@ -85,17 +87,30 @@ namespace DotNetCom.Text
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (TreeNode item in browserList.Nodes)
+            browserList.AfterCheck -= browserList_AfterCheck;
+            foreach (TreeNode node in browserList.Nodes)
             {
-                item.Checked = true;
+                CheckAllNodes(node, true);
             }
+            browserList.AfterCheck += browserList_AfterCheck;
         }
 
         private void deselectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach (TreeNode item in browserList.Nodes)
+            browserList.AfterCheck -= browserList_AfterCheck;
+            foreach (TreeNode node in browserList.Nodes)
             {
-                item.Checked = false;
+                CheckAllNodes(node, false);
+            }
+            browserList.AfterCheck += browserList_AfterCheck;
+        }
+
+        private void CheckAllNodes(TreeNode node, bool status)
+        {
+            foreach (TreeNode item in node.Nodes)
+            {
+                item.Checked = status && item.Nodes.Count == 0;
+                CheckAllNodes(item, status);
             }
         }
 
@@ -103,28 +118,50 @@ namespace DotNetCom.Text
         {
             foreach (TreeNode item in browserList.Nodes)
             {
-                var jsIt = NodeToJsonItem(item);
-                if (itIds.Contains(jsIt.Path)) continue;
-                itIds.Add(jsIt.Path);
+                AddAllCheckedNodes(item);
+            }
+        }
 
-                var tagLink = JsonItemToTagLink(jsIt);
-                var list = SelectedItems?.ToList() ?? new List<TagLink>();
-                var itNode = itemsToAdd.Items.Add(tagLink.Name);
+        private void AddAllCheckedNodes(TreeNode node)
+        {
+            if (node.Checked != false)
+            {
+                var jsIt = NodeToJsonItem(node, jsonData);
+                if (!itIds.Contains(jsIt.Path))
+                {
+                    itIds.Add(jsIt.Path);
 
-                list.Add(tagLink);
-                itNode.Tag = tagLink;
-                SelectedItems = list.ToArray();
+                    var tag = new Tag();
+                    var tagLink = JsonItemToTagLink(jsIt);
+                    var list = SelectedItems?.ToList() ?? new List<TagLink>();
+                    var itNode = itemsToAdd.Items.Add(tagLink.Name);
+                    var upper = cbUpperCase.Checked;
+                                        
+                    tag.Name = cbFullId.Checked
+                        ? General.Tags.Tag.GetTagName(jsIt.Path, upper)
+                        : General.Tags.Tag.GetTagName(tagLink.Name, upper);
+                    tagLink.TagName = tag.Name;
+                    list.Add(tagLink);
+                    itNode.Tag = tagLink;
+                    SelectedItems = list.ToArray();
+                }
+            }
+            foreach (TreeNode item in node.Nodes)
+            {
+                AddAllCheckedNodes(item);
             }
         }
 
         private void TextInterface_DataAvailable(object sender, EventArgs e)
         {
-            rtbReceivedData.AppendText(textInterface.ReceivedData + '\n');
+            string receivedData = textInterface.ReceivedData;
+            Log(receivedData);
             try
             {
                 if (browserList.Nodes.Count == 0)
                 {
-                    JObject json = JObject.Parse(textInterface.ReceivedData);
+                    JObject json = JObject.Parse(receivedData);
+                    jsonData = receivedData;
                     browserList.Invoke((MethodInvoker)delegate {
                         JsonTreeViewLoader.AddObjectNodes(json, "Received Data", browserList.Nodes);
                     });
@@ -132,18 +169,43 @@ namespace DotNetCom.Text
             }
             catch (Exception ex)
             {
-                rtbReceivedData.AppendText(ex.Message + '\n');
-                rtbReceivedData.AppendText(ex.StackTrace + '\n');
+                Log(ex.Message);
+                Log(ex.StackTrace);
+            }
+
+        }
+
+        private void Log(string msg)
+        {
+            if (rtbReceivedData.InvokeRequired)
+            {
+                rtbReceivedData.Invoke((MethodInvoker)delegate
+                {
+                    rtbReceivedData.AppendText(msg + '\n');
+                });
+            }
+            else
+            {
+                rtbReceivedData.AppendText(msg + '\n');
             }
         }
 
-        private JsonItem NodeToJsonItem(TreeNode node)
+        private JsonItem NodeToJsonItem(TreeNode node, string jsonData)
         {
-            JObject json = JObject.Parse(textInterface.ReceivedData);
             var path = node.FullPath.Replace('\\', '.').Split(':')[0];
+            object value;
             path = path.Replace("Received Data.", "");
             node.Tag = path;
-            var value = json.SelectToken(path);
+            try
+            {
+                JObject json = JObject.Parse(jsonData);
+                value = json.SelectToken(path);
+            }
+            catch (Exception ex)
+            {
+                value = ex.Message;
+                throw;
+            }
             var selected = new JsonItem(path, value);
             return selected;
         }
@@ -156,6 +218,14 @@ namespace DotNetCom.Text
                 Name = jsonItem.Path.Split('.').ToList().Last()
             };
             return tagLink;
+        }
+
+        private void itemsToAdd_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (itemsToAdd.SelectedItems?.Count > 0)
+            {
+                itemProperty.SelectedObject = itemsToAdd.SelectedItems[0].Tag;
+            }
         }
     }
 
