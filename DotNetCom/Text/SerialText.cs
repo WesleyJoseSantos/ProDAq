@@ -1,9 +1,14 @@
 ﻿using DotNetCom.General.Tags;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing.Design;
 using System.IO.Ports;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace DotNetCom.Text
@@ -17,6 +22,7 @@ namespace DotNetCom.Text
     [JsonObject(MemberSerialization.OptIn)]
     public partial class SerialText : Serial, IText
     {
+
         [JsonProperty]
         [Category("Split Options")]
         [DisplayName("Split mode")]
@@ -95,12 +101,45 @@ namespace DotNetCom.Text
 
                     break;
                 case SplitMode.Json:
-
+                    JsonParseStringToTags(ReceivedData);
                     break;
                 default:
                     break;
             }
             DataAvailable?.Invoke(this, null);
+        }
+
+        private void JsonParseStringToTags(string jsonStr)
+        {
+            if (TagLinks == null) return;
+            JObject json;
+            try
+            {
+                json = JObject.Parse(jsonStr);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            foreach (var tag in TagLinks)
+            {
+                try
+                {
+                    var value = (JValue)json.SelectToken(tag.Id);
+                    if (value != null)
+                    {
+                        tag.Value = value.Value;
+                    }
+                    else
+                    {
+                        tag.Status = TagLinkStatus.Bad;
+                    }
+                }
+                catch (Exception)
+                {
+                    tag.Status = TagLinkStatus.Bad;
+                }
+            }
         }
     }
 }
