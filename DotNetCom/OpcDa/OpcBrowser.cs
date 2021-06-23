@@ -174,6 +174,7 @@ namespace DotNetCom.OpcDa
                     var tag = item.Tag as TagLink;
                     var list = SelectedItems.ToList();
                     list.Remove(tag);
+                    itIds.Remove(tag.Id);
                     SelectedItems = list.ToArray();
                     itemsToAdd.Items.Remove(item);
                 }
