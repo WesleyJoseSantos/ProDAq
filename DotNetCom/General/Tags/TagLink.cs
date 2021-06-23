@@ -20,8 +20,8 @@ namespace DotNetCom.General.Tags
         [Category("General")]
         [DisplayName("Name")]
         [Description("Generic name of this link item. Optional.")]
-        public string Name { get; set; }
 
+        public string Name { get; set; }
         [JsonProperty]
         [Category("General")]
         [DisplayName("Tag Name")]

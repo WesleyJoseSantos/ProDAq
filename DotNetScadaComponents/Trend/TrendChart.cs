@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
 namespace DotNetScadaComponents.Trend
@@ -21,32 +22,6 @@ namespace DotNetScadaComponents.Trend
             
         }
 
-        public void Init()
-        {
-            //Series.Clear();
-            //ChartAreas.Clear();
-            //ChartArea chartArea1 = new ChartArea();
-            //CustomLabel customLabelX = new CustomLabel();
-            //CustomLabel customLabelY = new CustomLabel();
-            //Legend legend1 = new Legend();
-            //AllowDrop = true;
-
-            //chartArea1.AxisX.CustomLabels.Add(customLabelX);
-            //chartArea1.AxisX.MajorGrid.LineColor = Color.LightGray;
-            //chartArea1.AxisY.CustomLabels.Add(customLabelY);
-            //chartArea1.AxisY.Enabled = AxisEnabled.False;
-            //chartArea1.Name = "ChartArea1";
-            //ChartAreas.Add(chartArea1);
-
-            //legend1.BackColor = Color.Transparent;
-            //legend1.DockedToChartArea = "ChartArea1";
-            //legend1.Docking = Docking.Left;
-            //legend1.Name = "Legend1";
-            //Legends.Add(legend1);
-
-
-        }
-
         public void AddData(string name, object value, string time)
         {
             var trendIdx = 0;
@@ -54,33 +29,24 @@ namespace DotNetScadaComponents.Trend
             if (value == null) return;
             if(value is bool)
             {
-                trendIdx = AddBooleanData(name, (bool)value, time);
+                SafeAction(delegate
+                {
+                    trendIdx = AddBooleanData(name, (bool)value, time);
+                });
             }
             else
             {
-                trendIdx = series.Points.AddXY(time, value);
-                //var chartArea = ChartAreas.FindByName(series.ChartArea);
-                //var digArea = GetDigitalChartArea();
-                //chartArea.RecalculateAxesScale();
-                //digArea.AxisX.Minimum = chartArea.AxisX.Minimum;
-                //digArea.AxisX.Maximum = chartArea.AxisX.Maximum;
-                //digArea.AxisY.Minimum = chartArea.AxisY.Minimum;
-                //digArea.AxisY.Maximum = chartArea.AxisY.Maximum;
+                SafeAction(delegate
+                {
+                    trendIdx = series.Points.AddXY(time, value);
+                });
             }
             if(trendIdx > Settings.Axis.X.Size)
             {
-                series.Points.RemoveAt(0);
-                //var chartArea = ChartAreas.FindByName(series.ChartArea);
-                //chartArea.RecalculateAxesScale();
-                //foreach (var chart in ChartAreas)
-                //{
-                //    chart.AxisX.Minimum = trendIdx - Settings.Axis.X.Size;
-                //}
-                //foreach (var series in Series)
-                //{
-                //    var chartArea = ChartAreas.FindByName(series.ChartArea);
-                //    chartArea.RecalculateAxesScale();
-                //}
+                SafeAction(delegate
+                {
+                    series.Points.RemoveAt(0);
+                });
             }
         }
 
@@ -106,8 +72,12 @@ namespace DotNetScadaComponents.Trend
             {
                 return analogSeries[name];
             }
-            var newSeries = Series.Add(name);
-            ConfigureSeries(ref newSeries, value);
+            Series newSeries = null;
+            SafeAction(delegate
+            {
+                newSeries = Series.Add(name);
+                ConfigureSeries(ref newSeries, value);
+            });
             return newSeries;
         }
 
@@ -136,7 +106,6 @@ namespace DotNetScadaComponents.Trend
                 digSeriesList.Add(series);
                 series.ChartType = SeriesChartType.Range;
                 series.ChartArea = GetDigitalChartArea().Name;
-                //series.CustomProperties = "PointWidth=" + 2;
             }
             else
             {
@@ -157,13 +126,6 @@ namespace DotNetScadaComponents.Trend
             chart.AxisY.Enabled = AxisEnabled.False;
             chart.AxisX.Enabled = AxisEnabled.False;
             chart.AxisX.Maximum = Settings.Axis.X.Size;
-
-            //foreach (var axis in chart.Axes)
-            //{
-            //    axis.MajorTickMark.Enabled = false;
-            //    axis.MajorGrid.Enabled = false;
-            //    axis.LabelStyle.Enabled = false;
-            //}
 
             chart.BackColor = Color.Transparent;
             ChartAreas.Add(chart);
@@ -188,9 +150,19 @@ namespace DotNetScadaComponents.Trend
             }
         }
 
-        private void InitializeComponent()
+        private void SafeAction(Action action)
         {
-
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker)delegate
+                {
+                    action();
+                });
+            }
+            else
+            {
+                action();
+            }
         }
     }
 

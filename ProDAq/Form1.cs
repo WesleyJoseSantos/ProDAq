@@ -15,5 +15,30 @@ namespace ProDAq
         {
             InitializeComponent();
         }
+
+        private void btConnect_Click(object sender, EventArgs e)
+        {
+            serialText1.Begin();
+        }
+
+        private void btDisconnect_Click(object sender, EventArgs e)
+        {
+            serialText1.End();
+        }
+
+        private void trend_MouseClick(object sender, MouseEventArgs e)
+        {
+            propertyGrid.SelectedObject = trend;
+        }
+
+        private void btTrendStart_Click(object sender, EventArgs e)
+        {
+            trend.Start();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            trend.Stop();
+        }
     }
 }
