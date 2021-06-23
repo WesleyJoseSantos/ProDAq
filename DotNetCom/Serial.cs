@@ -53,6 +53,12 @@ namespace DotNetCom
         [Description("String used to detect end of line.")]
         public string Terminator { get => serialPort.NewLine; set => serialPort.NewLine = value; }
 
+        [JsonProperty]
+        [Category("Serial")]
+        [DisplayName("Connected")]
+        [Description("Flag that signs if serial port is connected.")]
+        public bool IsOpen { get => serialPort.IsOpen; }
+
         public Serial()
         {
             InitializeComponent();
