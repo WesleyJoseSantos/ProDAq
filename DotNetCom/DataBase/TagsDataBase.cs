@@ -102,6 +102,10 @@ namespace DotNetCom.DataBase
                 {
                     list.Add(Tags[tag]);
                 }
+                else
+                {
+                    Add(new Tag(tag));
+                }
             }
             return list.ToArray();
         }
@@ -133,6 +137,7 @@ namespace DotNetCom.DataBase
 
         public Tag GetTag(string tagName)
         {
+            if (tagName == null) return null;
             if (Tags.ContainsKey(tagName))
             {
                 return Tags[tagName];
