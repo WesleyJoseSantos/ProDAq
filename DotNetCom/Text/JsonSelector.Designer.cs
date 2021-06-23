@@ -205,6 +205,7 @@ namespace DotNetCom.Text
             this.btOk.TabIndex = 6;
             this.btOk.Text = "OK";
             this.btOk.UseVisualStyleBackColor = true;
+            this.btOk.Click += new System.EventHandler(this.btOk_Click);
             // 
             // btCancel
             // 
@@ -215,6 +216,7 @@ namespace DotNetCom.Text
             this.btCancel.TabIndex = 5;
             this.btCancel.Text = "Cancel";
             this.btCancel.UseVisualStyleBackColor = true;
+            this.btCancel.Click += new System.EventHandler(this.btCancel_Click);
             // 
             // label2
             // 
@@ -239,6 +241,7 @@ namespace DotNetCom.Text
             this.itemsToAdd.UseCompatibleStateImageBehavior = false;
             this.itemsToAdd.View = System.Windows.Forms.View.Details;
             this.itemsToAdd.SelectedIndexChanged += new System.EventHandler(this.itemsToAdd_SelectedIndexChanged);
+            this.itemsToAdd.KeyDown += new System.Windows.Forms.KeyEventHandler(this.itemsToAdd_KeyDown);
             // 
             // columnHeader2
             // 
@@ -263,6 +266,7 @@ namespace DotNetCom.Text
             this.Controls.Add(this.splitContainer1);
             this.Name = "JsonSelector";
             this.Text = "JsonSelector";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.JsonSelector_FormClosing);
             this.Load += new System.EventHandler(this.JsonSelector_Load);
             this.cmsTree.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
