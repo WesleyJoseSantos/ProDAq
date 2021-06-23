@@ -75,13 +75,10 @@ namespace DotNetCom.Text
 
         private void browserList_AfterCheck(object sender, TreeViewEventArgs e)
         {
-            if (e.Node.Nodes.Count != 0 && e.Node.Checked == true)
+            var status = e.Node.Checked;
+            foreach (TreeNode item in e.Node.Nodes)
             {
-                e.Node.Checked = false;
-                foreach (TreeNode item in e.Node.Nodes)
-                {
-                    item.Checked = !item.Checked;
-                }
+                item.Checked = status;
             }
         }
 
@@ -109,7 +106,7 @@ namespace DotNetCom.Text
         {
             foreach (TreeNode item in node.Nodes)
             {
-                item.Checked = status && item.Nodes.Count == 0;
+                item.Checked = status;
                 CheckAllNodes(item, status);
             }
         }
@@ -124,7 +121,7 @@ namespace DotNetCom.Text
 
         private void AddAllCheckedNodes(TreeNode node)
         {
-            if (node.Checked != false)
+            if (node.Checked != false && node.Nodes.Count == 0)
             {
                 var jsIt = NodeToJsonItem(node, jsonData);
                 if (!itIds.Contains(jsIt.Path))
@@ -186,13 +183,21 @@ namespace DotNetCom.Text
             }
             else
             {
-                rtbReceivedData.AppendText(msg + '\n');
+                try
+                {
+                    rtbReceivedData.AppendText(msg + '\n');
+                }
+                catch (Exception)
+                {
+
+                }
             }
         }
 
         private JsonItem NodeToJsonItem(TreeNode node, string jsonData)
         {
             var path = node.FullPath.Replace('\\', '.').Split(':')[0];
+            bool valid;
             object value;
             path = path.Replace("Received Data.", "");
             node.Tag = path;
@@ -200,13 +205,15 @@ namespace DotNetCom.Text
             {
                 JObject json = JObject.Parse(jsonData);
                 value = json.SelectToken(path);
+                valid = true;
             }
             catch (Exception ex)
             {
                 value = ex.Message;
+                valid = false;
                 throw;
             }
-            var selected = new JsonItem(path, value);
+            var selected = new JsonItem(path, value, valid);
             return selected;
         }
 
@@ -215,7 +222,9 @@ namespace DotNetCom.Text
             var tagLink = new TagLink()
             {
                 Id = jsonItem.Path,
-                Name = jsonItem.Path.Split('.').ToList().Last()
+                Name = jsonItem.Path.Split('.').ToList().Last(),
+                Value = jsonItem.Value,
+                Status = jsonItem.Valid ? TagLinkStatus.Good : TagLinkStatus.Bad
             };
             return tagLink;
         }
@@ -227,6 +236,46 @@ namespace DotNetCom.Text
                 itemProperty.SelectedObject = itemsToAdd.SelectedItems[0].Tag;
             }
         }
+
+        private void btOk_Click(object sender, EventArgs e)
+        {
+            if (SelectedItems == null)
+            {
+                SelectedItems = new List<TagLink>().ToArray();
+            }
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void btCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void itemsToAdd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (itemsToAdd.SelectedIndices == null) return;
+                foreach (ListViewItem item in itemsToAdd.SelectedItems)
+                {
+                    var tag = item.Tag as TagLink;
+                    var list = SelectedItems.ToList();
+                    list.Remove(tag);
+                    itIds.Remove(tag.Id);
+                    SelectedItems = list.ToArray();
+                    itemsToAdd.Items.Remove(item);
+                }
+
+            }
+        }
+
+        private void JsonSelector_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            textInterface.DataAvailable -= TextInterface_DataAvailable;
+            textInterface.End();
+        }
     }
 
     public class JsonItem : Component
@@ -235,10 +284,13 @@ namespace DotNetCom.Text
         
         public object Value { get; set; }
 
-        public JsonItem(string path, object value)
+        public bool Valid { get; set; }
+
+        public JsonItem(string path, object value, bool valid)
         {
             Path = path;
             Value = value;
+            Valid = valid;
         }
     }
 
@@ -261,7 +313,12 @@ namespace DotNetCom.Text
                 
                 if (svc.ShowDialog(form) == DialogResult.OK)
                 {
-                    
+                    value = form.SelectedItems;
+                    foreach (var item in form.SelectedItems)
+                    {
+                        textInterface.Container?.Add(item);
+                        textInterface.Container?.Add(item.Tag);
+                    }
                 }
             }
 
